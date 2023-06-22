@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,9 +11,17 @@ public class Player : MonoBehaviour
     public AudioClip gameOverSound;
     public Animator enemyAnimator;
     public GameObject gameOverText;
+    public GameObject vidasTextObject;
 
     private int lives = 3;
     private bool isGameOver = false;
+    private Text vidasText;
+
+    private void Start()
+    {
+        vidasText = vidasTextObject.GetComponent<Text>();
+        UpdateVidasText();
+    }
 
     private void Update()
     {
@@ -61,6 +70,7 @@ public class Player : MonoBehaviour
                 isGameOver = true;
                 StartCoroutine(GameOver());
             }
+            UpdateVidasText();
         }
 
         // Colisão com tiro do inimigo
@@ -74,6 +84,7 @@ public class Player : MonoBehaviour
                 isGameOver = true;
                 StartCoroutine(GameOver());
             }
+            UpdateVidasText();
         }
     }
 
@@ -94,5 +105,10 @@ public class Player : MonoBehaviour
         // Aguardar 3 segundos antes de retornar ao Menu Principal
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene("MenuPrincipal");
+    }
+
+    private void UpdateVidasText()
+    {
+        vidasText.text = "Vidas: " + lives.ToString();
     }
 }
