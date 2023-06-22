@@ -10,15 +10,24 @@ public class Enemy : MonoBehaviour
     public GameObject bulletPrefab;
 
     private bool canShoot = true;
+    private static int enemyCount = 0;
 
     private void Start()
     {
+        if (enemyCount == 0)
+        {
+            // Gerar inimigos em posições aleatórias no início do jogo
+            GenerateEnemies();
+        }
+
         // Definir uma direção de movimento aleatória para cada inimigo
         moveSpeed *= Random.Range(-1, 2);
         // Definir um atraso de disparo aleatório para cada inimigo
         shootDelay = Random.Range(1f, 4f);
         // Iniciar a rotina de disparo
         StartCoroutine(Shoot());
+
+        enemyCount++;
     }
 
     private void Update()
@@ -51,5 +60,26 @@ public class Enemy : MonoBehaviour
     {
         // Parar a rotina de disparo quando o inimigo for desativado
         StopCoroutine(Shoot());
+        enemyCount--;
+
+        if (enemyCount == 0)
+        {
+            // Gerar inimigos em posições aleatórias quando todos os inimigos forem destruídos
+            GenerateEnemies();
+        }
+    }
+
+    private void GenerateEnemies()
+    {
+        // Definir o número de inimigos a serem gerados
+        int numberOfEnemies = Random.Range(3, 6);
+
+        for (int i = 0; i < numberOfEnemies; i++)
+        {
+            // Gerar posição aleatória para o inimigo
+            Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), transform.position.y, transform.position.z);
+            // Criar o inimigo na posição aleatória
+            Instantiate(gameObject, randomPosition, Quaternion.identity);
+        }
     }
 }
